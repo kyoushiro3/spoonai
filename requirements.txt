@@ -1,0 +1,3 @@
+axios
+typescript @types/node --save-dev
+npx tsc --init
