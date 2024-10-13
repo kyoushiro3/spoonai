@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { Ingredient } from '../components/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 function estimatePrice(ingredientName: string, quantity: number): number {
-  const pricePerKg = {
+  const pricePerKg: { [key: string]: number } = {
     "Pork belly": 400,
     "Fish sauce": 20,
     "Tamarind": 200,
@@ -13,17 +14,17 @@ function estimatePrice(ingredientName: string, quantity: number): number {
     "Radish": 150,
     "Kangkong": 100,
     "Salt": 100,
-    //sample prices will be improved 
+    // sample prices will be improved 
   };
 
-  const basePrice = pricePerKg[ingredientName] || 50; //for default value
+  const basePrice = pricePerKg[ingredientName as keyof typeof pricePerKg] || 50;
   return basePrice * quantity;
 }
 
 
-export async function fetchIngredients(dishNames: string[]) {
+async function fetchIngredients(dishNames: string[]): Promise<Ingredient[]> {
   try {
-    const allIngredients = [];
+    const allIngredients: Ingredient[] = [];
 
 
     for (const dishName of dishNames) {
@@ -45,20 +46,20 @@ export async function fetchIngredients(dishNames: string[]) {
           }
         );
 
-        const formattedIngredients = recipeDetails.data.extendedIngredients
+        const formattedIngredients: Ingredient[] = recipeDetails.data.extendedIngredients
           .filter(
-            (ingredient: any) => ingredient.name.toLowerCase() !== 'water'
+            (ingredient: Ingredient) => ingredient.name.toLowerCase() !== 'water'
           )
-          .map((ingredient: any) => {
+          .map((ingredient: Ingredient) => {
             const quantity = ingredient.amount;
             const unit = ingredient.unit || 'pcs';
             const estimatedPrice = estimatePrice(ingredient.name, quantity); 
 
             return {
-              Aisle: ingredient.aisle,
-              Item: ingredient.name,
-              Quantity: `${quantity} ${unit}`,
-              "Est. Price (PHP)": estimatedPrice,
+              aisle: ingredient.aisle,
+              name: ingredient.name,
+              amount: `${quantity} ${unit}`,
+              price: estimatedPrice,
             };
           });
 
@@ -68,6 +69,9 @@ export async function fetchIngredients(dishNames: string[]) {
 
     return allIngredients;
   } catch (error) {
+    console.error('Failed to fetch ingredients', error); 
     throw new Error('Failed to fetch ingredients');
   }
 }
+
+export default fetchIngredients;

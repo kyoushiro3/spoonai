@@ -1,31 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { fetchIngredients } from "../api/route";
 import InputForm from "./InputForm";
 import ShoppingList from "./ShoppingList";
+import fetchIngredients from "../api/fetchIngredients";
+import { Ingredient } from "./types";
 
 interface Dish {
   name: string;
   servings: number;
 }
 
+
 const DishManager: React.FC = () => {
-  const [ingredients, setIngredients] = useState<string[]>([]);
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const fetchAllIngredients = async (dishes: Dish[]) => {
     setError(null);
 
     try {
-      const fetchedIngredients: string[] = [];
+      const fetchedIngredients: Ingredient[] = [];
 
       const dishNames = dishes.map((dish) => dish.name);
-        const ingredientsForDish = await fetchIngredients(dishNames);
-        fetchedIngredients.push(...ingredientsForDish);
+      const ingredientsForDish = await fetchIngredients(dishNames);
+      
+      fetchedIngredients.push(...ingredientsForDish); 
 
       setIngredients(fetchedIngredients);
     } catch (error) {
+      console.error('Failed to fetch ingredients', error);
       setError("Failed to fetch ingredients.");
     }
   };

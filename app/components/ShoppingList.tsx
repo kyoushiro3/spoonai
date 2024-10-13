@@ -7,12 +7,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface Ingredient {
-  Aisle: string;
-  Item: string;
-  Quantity: string;
-  "Est. Price (PHP)": number;
-}
+import { Ingredient } from "./types";
+
 
 interface ShoppingListProps {
   ingredients: Ingredient[];
@@ -20,7 +16,7 @@ interface ShoppingListProps {
 
 const ShoppingList: React.FC<ShoppingListProps> = ({ ingredients }) => {
   const total = ingredients
-  .map((ingredient) => ingredient["Est. Price (PHP)"]) 
+  .map((ingredient) => ingredient.price) 
   .reduce((acc, price) => acc + price, 0); 
 
   return (
@@ -38,14 +34,14 @@ const ShoppingList: React.FC<ShoppingListProps> = ({ ingredients }) => {
         <TableBody>
           {ingredients.map((ingredient, index) => (
             <TableRow key={index}>
-              <TableCell className="font-medium">{ingredient.Aisle}</TableCell>
+              <TableCell className="font-medium">{ingredient.aisle}</TableCell>
               <TableCell>
-                {ingredient.Item.charAt(0).toUpperCase() +
-                  ingredient.Item.substring(1).toLowerCase()}
+                {ingredient.name.charAt(0).toUpperCase() +
+                  ingredient.name.substring(1).toLowerCase()}
               </TableCell>
-              <TableCell>{ingredient.Quantity}</TableCell>
+              <TableCell>{ingredient.amount}</TableCell>
               <TableCell className="text-right">
-                {ingredient["Est. Price (PHP)"]}
+                {ingredient.price}
               </TableCell>
             </TableRow>
           ))}
