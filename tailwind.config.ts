@@ -18,7 +18,7 @@ const config: Config = {
 		  },
 		  fontSize: {
 			sm: '0.8rem',
-			base: '1rem',
+			base: '14px',
 			xl: '1.25rem',
 			'2xl': '1.563rem',
 			'3xl': '1.953rem',
@@ -45,7 +45,7 @@ const config: Config = {
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
   			muted: {
-  				DEFAULT: 'hsl(var(--muted))',
+  				DEFAULT: '#5F656E',
   				foreground: 'hsl(var(--muted-foreground))'
   			},
   			accent: {
